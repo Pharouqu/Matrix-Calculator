@@ -1,0 +1,146 @@
+var w,h,my={}
+function matrixMain(){var w=620;h=500;my.rows=[3,3];my.cols=[3,3];var s="";s+='<div style="position:relative; border-radius: 10px; display:block; background-color: hsla(240,100%,96%,1); ">';for(var i=0;i<2;i++){s+='<div style="display: inline-block; min-height:200px; min-width:300px; vertical-align: top; position: relative; background-color: hsla(240,100%,94%,1); border-radius: 10px; margin:2px; ">';s+='<div id="title'+i+'" style="margin-left:20px; font: bold 22px Arial; text-align: left; color: darkblue; "></div>';s+='<input type="range" id="sr'+i+'" value="3" min="1" max="10" step="1" style="position:absolute; left:-72px; top:105px;  height:17px; width:150px; border: none; transform: rotate(90deg); margin-left: 10px;z-index:2; " oninput="dimSet('+i+',0,this.value)" onchange="dimSet('+i+',0,this.value)" />';s+='<input type="range" id="sc'+i+'" value="3" min="1" max="10" step="1" style=" position:absolute; left:8px; top:26px;  height:17px; width:150px; border: none; margin-left: 10px;z-index:2;" oninput="dimSet('+i+',1,this.value)" onchange="dimSet('+i+',1,this.value)" />';s+='<button id="upBtn" style="position:absolute; left:172px; top:20px; height:23px; font: 14px/16px Arial; color: #000aae; " class="togglebtn"  onclick="dimChg('+i+',0,-1)" >&#x25B2;</button>';s+='<button id="dnBtn" style="position:absolute; left:202px; top:20px; height:23px; font: 14px/16px Arial; color: #000aae; " class="togglebtn"  onclick="dimChg('+i+',0,1)" >&#x25BC;</button>';s+='<button id="ltBtn" style="position:absolute; left:232px; top:20px; height:23px; font: 14px/16px Arial; color: #000aae; " class="togglebtn"  onclick="dimChg('+i+',1,-1)" >&#x25C0;</button>';s+='<button id="rtBtn" style="position:absolute; left:262px; top:20px; height:23px; font: 14px/16px Arial; color: #000aae; " class="togglebtn"  onclick="dimChg('+i+',1,1)" >&#x25B6;</button>';s+='<div id="mat'+i+'" style="margin: 25px 5px 5px 30px; text-align: left;"></div>';s+='</div>';}
+var btns=[{s:'A+B',fn:matAdd},{s:'A&minus;B',fn:matSub},{s:'AB',fn:matMult},{s:'det(A)',fn:matDet},{s:'det(A) details',fn:matDetLong},{s:'example',fn:example},{s:'inv(A)',fn:matInv},{s:'A=I',fn:matAisI},{s:'B=I',fn:matBisI},{s:'A&#x2194;B',fn:matSwapAB},{s:'A<sup>T</sup>',fn:matATrans},{s:'B<sup>T</sup>',fn:matBTrans},{s:'A<sup>2</sup>',fn:matA2},{s:'B<sup>2</sup>',fn:matB2},{s:'cA',fn:matcA},{s:'cB',fn:matcB},{s:'to A',fn:matCtoA},{s:'to B',fn:matCtoB},{s:'from A',fn:matAtoC},{s:'from B',fn:matBtoC}];var rowBtnCount=15
+s+='<br>';s+='<div style="padding:2px; margin-bottom:5px; text-align: center; background-color: lightskyblue;border-radius: 10px; ">';for(i=0;i<btns.length;i++){var btn=btns[i]
+s+='<button id="btn'+i+'" style="color: #000aae; font: 18px Arial;" class="togglebtn"  onclick="'+btn.fn.name+'()" >'+btn.s+'</button>';if(i==rowBtnCount){s+='<input type="text" id="cVal" style="color: #0000ff; background-color: #eeffee; text-align:center; font: 20px Arial; width:35px; border-radius: 10px; " value="1" onKeyUp="inputChg()" />';s+='<div id="msg" style="height:22px; margin:2px; font: 20px Arial; text-align: center; color: red; "></div>';s+='</div>';s+='<div style="border: none;">';s+='<div style="float:left; text-align: center;">';s+='<div id="outLbl" style="margin: 2px 2px 5px 2px; height:22px; width: 60px; font: 18px Arial; text-align: right; color: darkblue;"></div>';s+='<div id="dirty" style="margin: 2px 2px 5px 2px; height:22px; width: 60px; font: 18px Arial; text-align: center; color: orange;"></div>';}
+if(i>=rowBtnCount){s+='<br>';}}
+s+='</div>';s+='<div style="overflow: hidden; display: block;">';s+='<textarea id="outTxt" style="margin:auto; width:98%; height:180px; font: 16px Arial; text-align: left; color: darkblue; border: 1px solid blue;" onkeyup="outChg()" onchange="outChg()" ></textarea>';s+='</div>';s+='</div>';s+='<div style="font: 11px arial; color: #6600cc;">&copy; 2021 MshalizahTech </div>';s+='</div>';document.write(s);my.examples=['3,2,1~6,3,3~1,4,5','5,1,1,0~0,9,1,1~6,1,8,0~0,0,1,2','0.5 1.2 1.22 -2.1~-1.1 -2.5 0.6 0~0 1.1 -2.2 -0.1~-3 1.2 -0.5 1',]
+my.exampleNo=-1
+my.isDirtyQ=false;this.resultMat=null;init();}
+function init(){resize(0,3,3);resize(1,3,3);}
+function inputChg(){console.log('inputChg')}
+function example(s){my.exampleNo=loop(my.exampleNo,0,my.examples.length-1)
+console.log('my.exampleNo',my.exampleNo)
+var s=my.examples[my.exampleNo]
+s=s.split('~').join('\n')
+document.getElementById('outTxt').value=s
+setDirty(true)
+matCtoA()}
+function loop(currNo,minNo,maxNo,incr){if(incr===undefined)incr=1;currNo+=incr;console.log('loop',currNo,minNo,maxNo,incr)
+var range=maxNo-minNo+1;if(currNo<minNo){currNo=maxNo-(-currNo+maxNo)%range;}
+if(currNo>maxNo){currNo=minNo+(currNo-minNo)%range;}
+return currNo;}
+function msg(s){document.getElementById('msg').innerHTML=s;}
+function getMat(n){var B=new Matrix(my.rows[n],my.cols[n]);for(var i=0;i<my.rows[n];i++){for(var j=0;j<my.cols[n];j++){var id=n+'_'+i+'_'+j;if(document.getElementById(id)!=null)
+B.setEntry(i,j,document.getElementById(id).value);}}
+return(B);}
+function setMat(n,A){var nr=A.getRows();var nc=A.getCols();for(var i=0;i<nr;i++){for(var j=0;j<nc;j++){var id=n+'_'+i+'_'+j;if(document.getElementById(id)!=null)
+document.getElementById(id).value=A.getEntry(i,j);}}}
+function dimSet(mat,dirn,n){console.log("dimSet",mat,dirn,n);if(dirn==0)my.rows[mat]=n;if(dirn==1)my.cols[mat]=n;var C=getMat(mat);document.getElementById('mat'+mat).innerHTML=getMatHTML(mat,my.rows[mat],my.cols[mat]);setMat(mat,C);document.getElementById('title'+mat).innerHTML=String.fromCharCode(65+mat)+': '+my.rows[mat]+'&times;'+my.cols[mat];}
+function dimChg(mat,dirn,nchg){var n=dirn==0?my.rows[mat]:my.cols[mat];n=Number(n)
+console.log("dimChg A",mat,dirn,n,nchg);n=Math.max(1,Math.min(n+nchg,10))
+if(dirn==0){my.rows[mat]=n
+document.getElementById('sr'+mat).value=n}else{my.cols[mat]=n
+document.getElementById('sc'+mat).value=n}
+console.log("dimChg B",mat,dirn,n);var C=getMat(mat);document.getElementById('mat'+mat).innerHTML=getMatHTML(mat,my.rows[mat],my.cols[mat]);setMat(mat,C);document.getElementById('title'+mat).innerHTML=String.fromCharCode(65+mat)+': '+my.rows[mat]+'&times;'+my.cols[mat];}
+function resize(n,r,c){var C=getMat(n);my.rows[n]=r;my.cols[n]=c;document.getElementById('sr'+n).value=r;document.getElementById('sc'+n).value=c;document.getElementById('mat'+n).innerHTML=getMatHTML(n,my.rows[n],my.cols[n]);setMat(n,C);document.getElementById('title'+n).innerHTML=String.fromCharCode(65+n)+': '+my.rows[n]+'&times;'+my.cols[n];}
+function getMatHTML(mat,m,n){var s='';for(var i=0;i<m;i++){for(var j=0;j<n;j++){var id=mat+'_'+i+'_'+j;s+='<input type="text" id="'+id+'" style="color: #0000ff; background-color: #eeffee; text-align:center; font: 15px Arial; width:40px; border-radius: 10px; " value="" onKeyUp="inputChg()" />';}
+s+='<br>';}
+return s;}
+function parseToA(){var C=new Matrix();C.parse(document.getElementById('outTxt').value);resize(0,C.getRows(),C.getCols());setMat(0,C);return false;}
+function parseToB(){var C=new Matrix();C.parse(document.getElementById('outTxt').value);resize(1,C.getRows(),C.getCols());setMat(1,C);return false;}
+function matAdd(){if(my.rows[0]==my.rows[1]&&my.cols[0]==my.cols[1]){var A=getMat(0);var B=getMat(1);msg("");out(A.add(B),"A+B");}else{msg("A and B must be same size");}}
+function matSub(){if(my.rows[0]==my.rows[1]&&my.cols[0]==my.cols[1]){var A=getMat(0);var B=getMat(1);msg("");out(A.subtract(B),"A&minus;B");}else{msg("A and B must be same size");}}
+function matMult(){if(my.cols[0]==my.rows[1]){var A=getMat(0);var B=getMat(1);msg("");out(A.multiply(B),"AB");}else{msg("A's columns must equal B's rows");}}
+function matDet(){var A=getMat(0);if(A.getRows()==A.getCols()){var x=A.det();msg("Det(A) = "+x);}else{msg("A must be a square matrix");}
+document.getElementById('outTxt').value=''}
+function matDetLong(){var A=getMat(0);if(A.getRows()==A.getCols()){var x=A.detLong();msg("Det(A) = "+x);my.explain=''
+var x=A.detLong();console.log('Det(A) = '+x);console.log('explain = '+my.explain);my.explain=my.explain.split('--').join('+')
+my.explain=my.explain.split('x').join('\xD7')
+my.explain+=' = '+x
+document.getElementById('outLbl').innerHTML='det(A)=';document.getElementById('outTxt').value=my.explain;}else{msg("A must be a square matrix");document.getElementById('outTxt').value=''}}
+function matRank(){var A=getMat(0);var x=A.rank()
+console.log('Rank(A) = '+x);}
+function matInv(){var A=getMat(0);if(A.getRows()==A.getCols()){var B=A.inverse();if(B==null){msg("Determinant is 0. Inverse does not exist.");}else{msg("");out(B,"inv(A)");}}else{msg("A must be a square matrix");}}
+function matAisI(){var n=0;if(my.rows[n]==my.cols[n]){var A=new Matrix(my.rows[n],my.cols[n]);setMat(n,A.getIdentity());}else{msg("A must be a square matrix");}}
+function matBisI(){var n=1;if(my.rows[n]==my.cols[n]){var A=new Matrix(my.rows[n],my.cols[n]);console.log("A="+A.getIdentity().getFmt());setMat(n,A.getIdentity());}else{msg("B must be a square matrix");}}
+function matSwapAB(){var A=getMat(0);var B=getMat(1);resize(0,B.getRows(),B.getCols());setMat(0,B);resize(1,A.getRows(),A.getCols());setMat(1,A);}
+function matATrans(){var A=getMat(0);msg("");out(A.transpose(),"A<sup>T</sup>");}
+function matBTrans(){var B=getMat(1);msg("");out(B.transpose(),"B<sup>T</sup>");}
+function matA2(){var A=getMat(0);var B=getMat(0);if(A.getCols()==B.getRows()){msg("");out(A.multiply(B),"A<sup>2</sup>");}else{msg("A must have same number of rows as columns");}}
+function matB2(){var A=getMat(1);var B=getMat(1);if(A.getCols()==B.getRows()){msg("");out(A.multiply(B),"B<sup>2</sup>");}else{msg("B must have same number of rows as columns");}}
+function matcA(){var A=getMat(0);var c=Number(document.getElementById('cVal').value);out(A.multScalar(c),"cA");}
+function matcB(){var B=getMat(1);var c=Number(document.getElementById('cVal').value);out(B.multScalar(c),"cB");}
+function matCtoA(){var OKQ=true;if(my.isDirtyQ){OKQ=parseToA();}
+if(OKQ){if(this.resultMat!=null){resize(0,this.resultMat.getRows(),this.resultMat.getCols());setMat(0,this.resultMat);}}}
+function matCtoB(){var OKQ=true;if(my.isDirtyQ){OKQ=parseToB();}
+if(OKQ){if(this.resultMat!=null){resize(1,this.resultMat.getRows(),this.resultMat.getCols());setMat(1,this.resultMat);}}}
+function matAtoC(){out(getMat(0),"A");setDirty(true)}
+function matBtoC(){out(getMat(1),"B");setDirty(true)}
+function out(C,label){if(C==null){this.resultMat=null;document.getElementById('outLbl').innerHTML='';document.getElementById('outTxt').value='';}else{this.resultMat=C;document.getElementById('outLbl').innerHTML=label+"=";var s='';switch("text"){case "text":s=C.getFmt();break;case "latex a":s=C.getLatex("array");break;case "latex b":s=C.getLatex("bmatrix");break;default:}
+document.getElementById('outTxt').value=s;}
+setDirty(false);}
+function outChg(){setDirty(true);}
+function setDirty(onQ){my.isDirtyQ=onQ;if(my.isDirtyQ){document.getElementById('dirty').innerHTML="edited";}else{document.getElementById('dirty').innerHTML="";}}
+class Matrix{constructor(r,c){this.nrows=r;this.ncols=c;this.mat=[];this.initMe();}
+initMe(){for(var i=0;i<this.nrows;i++){this.mat[i]=[];for(var j=0;j<this.ncols;j++){this.mat[i].push(0);}}}
+setSize(nr,nc){if(nr>this.nrows||nc>this.ncols){}
+this.nrows=nr;this.ncols=nc;}
+getRows(){return(this.nrows);}
+getCols(){return(this.ncols);}
+getEntry(row,col){return(this.mat[row][col]);}
+setEntry(row,col,val){if(row<this.nrows&&col<this.ncols){this.mat[row][col]=Number(val);}}
+setEntries(a){var n=0;for(var i=0;i<this.nrows;i++){for(var j=0;j<this.ncols;j++){this.mat[i][j]=a[n++];}}}
+parse(s){s=s.replace(/\~/g,"\n");var lines=s.split("\n");this.nrows=lines.length;for(var i=0;i<lines.length;i++){var line=lines[i];line=line.trim();line=line.replace(/\s*\,\s*/g,",");line=line.replace(/\s+/g,",");line=line.replace(/[\[\]]/g,"");console.log(i,": "+line);var vals=line.split(",");if(i==0){this.ncols=vals.length;this.initMe();}
+for(var j=0;j<vals.length;j++){this.setEntry(i,j,vals[j]);}}}
+getFmt(){var s="";for(var i=0;i<this.nrows;i++){if(i>0)
+s+="\n";for(var j=0;j<this.ncols;j++){var v=this.getEntry(i,j).toPrecision(15);v=fmtNum(v);s+=v;s+=" ";}}
+return(s);}
+getLatex(style){style=typeof style!=='undefined'?style:"bmatrix";var s="";switch(style){case "array":s+="\\left[\\begin{array}{"+Strings.repeat("c",this.ncols)+"}";break;case "bmatrix":s+="\\begin{bmatrix}";break;default:s+="\\begin{bmatrix}";}
+s+="\n";for(var i=0;i<this.nrows;i++){if(i>0)
+s+=" \\\\ \n";for(var j=0;j<this.ncols;j++){if(j>0)
+s+=" & ";}}
+s+="\n";switch(style){case "array":s+="\\end{array}\\right]";break;case "bmatrix":s+="\\end{bmatrix}";break;default:s+="\\end{bmatrix}";}
+return(s);}
+transpose(){var B=new Matrix(this.ncols,this.nrows);for(var i=0;i<this.nrows;i++){for(var j=0;j<this.ncols;j++){B.mat[j][i]=this.mat[i][j];}}
+return(B);}
+getIdentity(){if(this.nrows==this.ncols){var B=new Matrix(this.nrows,this.ncols);for(var i=0;i<this.nrows;i++){for(var j=0;j<this.ncols;j++){if(i==j){B.mat[i][j]=1;}else{B.mat[i][j]=0;}}}
+return(B);}else{return(null);}}
+addScalar(val){var B=new Matrix(this.nrows,this.ncols);for(var i=0;i<this.nrows;i++){for(var j=0;j<this.ncols;j++){B.mat[i][j]=this.mat[i][j]+val;}}
+return(B);}
+multScalar(val){var B=new Matrix(this.nrows,this.ncols);for(var i=0;i<this.nrows;i++){for(var j=0;j<this.ncols;j++){B.mat[i][j]=this.mat[i][j]*val;}}
+return B;}
+add(B){if((this.nrows==B.nrows)&&(this.ncols==B.ncols)){var C=new Matrix(this.nrows,this.ncols);for(var i=0;i<this.nrows;i++){for(var j=0;j<this.ncols;j++){C.mat[i][j]=Number(this.mat[i][j])+Number(B.mat[i][j]);}}
+return C;}else{return null;}}
+subtract(B){if((this.nrows==B.nrows)&&(this.ncols==B.ncols)){var C=new Matrix(this.nrows,this.ncols);for(var i=0;i<this.nrows;i++){for(var j=0;j<this.ncols;j++){C.mat[i][j]=Number(this.mat[i][j])-Number(B.mat[i][j]);}}
+return C;}else{return null;}}
+multiply(B){if(this.ncols==B.nrows){var C=new Matrix(this.nrows,B.ncols);for(var i=0;i<this.nrows;i++){for(var k=0;k<B.ncols;k++){var sum=0;for(var j=0;j<this.ncols;j++){sum+=this.mat[i][j]*B.mat[j][k];}
+C.mat[i][k]=sum;}}
+return C;}else{return null;}}
+mult3by1(B){var C=new Matrix(0,0);return C;}
+copy(){var B=new Matrix(this.nrows,this.ncols);for(var i=0;i<this.nrows;i++){for(var j=0;j<this.ncols;j++){B.mat[i][j]=this.mat[i][j];}}
+return(B);}
+copyExcept(notRow,notCol){var B=new Matrix(this.nrows-1,this.ncols-1);var bi=0;for(var i=0;i<this.nrows;i++){if(i!=notRow){var bj=0;for(var j=0;j<this.ncols;j++){if(j!=notCol){B.mat[bi][bj]=this.mat[i][j];bj++;}}
+bi++;}}
+return(B);}
+det(){if(this.nrows==this.ncols){var mat=this.mat;if(this.nrows==1)
+return mat[0][0];if(this.nrows==2)
+return mat[0][0]*mat[1][1]-mat[0][1]*mat[1][0];var B=this.toRightTriangular();var deter=1;for(var i=0;i<this.nrows;i++){deter=deter*B.mat[i][i];}
+return deter;}else{return 0;}}
+detLong(){if(this.nrows!=this.ncols){return 0;}
+if(this.nrows==2){console.log('detLong is 2x2');my.explain+=this.mat[0][0]+'x'+this.mat[1][1]+'-'+this.mat[0][1]+'x'+this.mat[1][0];return this.mat[0][0]*this.mat[1][1]-this.mat[0][1]*this.mat[1][0];}else{var x=0;for(var i=0;i<this.nrows;i++){var B=this.copyExcept(0,i);var plusmn=Math.pow(-1,i)>0?'+':'-';if(i==0)plusmn='';my.explain+=plusmn+this.mat[0][i]+'(';var det=B.detLong();my.explain+=')';x+=Math.pow(-1,i)*this.mat[0][i]*det;}
+console.log('detLong',this.nrows,x);return x;}}
+toRightTriangular(){var M=this.copy();var n=this.nrows;var kp=this.ncols;var k=n;var p;do{var i=k-n;if(M.mat[i][i]==0){for(var j=i+1;j<k;j++){if(M.mat[j][i]!=0){var els=[];var np=kp;do{p=kp-np;els.push(M.mat[i][p]+M.mat[j][p]);}while(--np);M.mat[i]=els;break;}}}
+if(M.mat[i][i]!=0){for(j=i+1;j<k;j++){var multiplier=M.mat[j][i]/M.mat[i][i];els=[];np=kp;do{p=kp-np;els.push(p<=i?0:M.mat[j][p]-M.mat[i][p]*multiplier);}while(--np);M.mat[j]=els;}}}while(--n);return M;}
+cofactors(){if(this.nrows==this.ncols){if(this.nrows==1)
+return null;var B=new Matrix(this.nrows,this.ncols);for(var i=0;i<this.nrows;i++){for(var j=0;j<this.ncols;j++){var C=this.minorMat(i,j);B.mat[i][j]=C.det()*Math.pow(-1,i+j);}}
+return B;}else{return null;}}
+minorMat(row,col){var B=new Matrix(this.nrows-1,this.ncols-1);for(var i=0,im=0;i<this.nrows;i++,im++){if(i==row){im--;}else{for(var j=0,jm=0;j<this.ncols;j++,jm++){if(j==col){jm--;}else{B.mat[im][jm]=this.mat[i][j];}}}}
+return(B);}
+inverse(){var determinant=this.det();if(determinant!=0){var B=this.cofactors();B=B.transpose();B=B.multScalar(1/determinant);return B;}else{return null;}}
+swap(mat,row1,row2,col){for(var i=0;i<col;i++){var temp=mat[row1][i];mat[row1][i]=mat[row2][i];mat[row2][i]=temp;}}
+rank(){var B=this.copy()
+var mat=B.mat
+var R=B.nrows
+var C=B.ncols
+var rank=C;for(var row=0;row<rank;row++){console.log('row',row,mat)
+console.log('row',mat[row])
+if(mat[row][row]!=0){for(var col=0;col<R;col++){if(col!=row){var mult=mat[col][row]/mat[row][row];for(var i=0;i<rank;i++){mat[col][i]-=mult*mat[row][i];}}}}else{var reduce=true;for(var i=row+1;i<R;i++){if(mat[i][row]!=0){for(var j=0;j<rank;j++){var temp=mat[row][j];mat[row][j]=mat[i][j];mat[i][j]=temp;}
+reduce=false;break;}}
+if(reduce){rank--;for(var i=0;i<R;i++){mat[i][row]=mat[i][rank];}}
+row--;}}
+return rank;}
+getArray(){return this.mat;}}
+function fmtNum(v){var s=(+v).toPrecision(15);if(s.indexOf(".")>0&&s.indexOf('e')<0){s=s.replace(/0+$/,'');}
+if(s.charAt(s.length-1)=='.'){s=s.substr(0,s.length-1);}
+return s;}
