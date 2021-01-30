@@ -1,33 +1,60 @@
-@font-face{
-	font-family:champ)}:root{--txtClr: #333;--bgClr: hsl(0, 0%, 100%);--bg: linear-gradient(to right, hsla(214, 100%, 90%, 100%) 0%, hsla(214, 100%, 90%, 0%) 20%, hsla(214, 100%, 90%, 0%) 50%, hsla(214, 100%, 90%, 0%) 80%, hsla(214, 100%, 90%, 100%) 100%);--a0Clr: hsla(50, 100%, 98%, 70%);--a1Clr: hsl(50, 100%, 96%);--a2Clr: hsl(50, 100%, 85%);--b0Clr: hsla(214, 100%, 50%, 20%);--b1Clr: hsl(214, 100%, 95%);--b3Clr: hsl(214, 65%, 46%);--b4Clr: hsl(214, 100%, 25%);--o1Clr: hsl(44, 100%, 50%);--r1Clr: hsl(0, 100%, 60%);
 
---h1Shadow: 2px 5px 5px hsl(0, 0%, 100%), 0px 0px 0 hsl(214, 100%, 25%)}
-
-
-@media all{body{font:15px/23px Verdana,Arial,Tahoma,sans-serif;color:var(--txtClr);line-height:1.52}
-
-
-h1{margin:18px 0 5px;font:40px champ,Verdana,Arial;text-align:center;color:var(--b0Clr);text-shadow:var(--h1Shadow)}
-
-
-
-h3{margin:24px 0 10px;font-weight:400;font-size:18px;color:var(--b3Clr)}
-
-h4{margin:22px 0 10px;font-weight:400;font-size:19px;font-variant:small-caps;color:var(--o1Clr)}
-
-
-
-.example{margin:20px 0 30px 45px;background-color:var(--b1Clr);padding:5px 10px 1px;border-radius:10px;box-shadow:4px 4px 3px var(--b4Clr);overflow:hidden}
-
-
-.example h3{margin:2px -2px 12px;padding:2px 8px;background:var(--a1Clr);border-radius:8px;color:var(--txtClr)}
-
-
-body {
-background-image: url("bag.jpg")
+	
+	:root{
+		--o1Clr: hsl(44, 100%, 50%)
 }
 
+@media all{
+	body{
+		margin:0;
+		padding:0;
+		font:25px/30px Verdana,Arial,Tahoma,sans-serif;
+		color:#333;
+		line-height:1.52
+	}
 
+
+h1{
+	margin:18px 0 5px;
+	font:40px champ,Verdana,Arial;
+	text-align:center;
+	
+	}
+
+h3{
+	margin:24px 0 10px;
+	font-weight:400;
+	font-size:18px;
+	}
+
+h4{
+	margin:22px 0 10px;
+	font-weight:400;
+	font-size:19px;
+	font-variant:small-caps;
+	color:var(--o1Clr)
+	}
+
+p{min-width:150px;overflow:150px}
+
+
+.example{
+	margin:20px 0 30px 45px;
+	background-color:#9DE8DB;
+	padding:5px 10px 1px;
+	border-radius:10px;
+	box-shadow:4px 4px 3px #716E6E;
+	overflow:hidden
+	}
+
+
+.example h3{
+	margin:2px -2px 12px;
+	padding:2px 8px;
+	background:#fff;
+	border-radius:8px;
+	color:#0EBE14
+	}
 
 .bg{
 	height:100px;
@@ -38,7 +65,9 @@ background-image: url("bag.jpg")
 	text-align:center
 	}
 #content {
-		max-width:760px;text-align:left;margin:-65px auto 15px
+		max-width:760px;
+		text-align:left;
+		margin:-65px auto 15px
 		}
 #copyrt {
 	margin:5px auto 5px;text-align:center;font:14px Arial;color:var(--o1Clr)
