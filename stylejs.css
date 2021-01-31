@@ -1,0 +1,27 @@
+
+
+.togglebtn{display:inline-block;
+	position:relative;
+	text-align:center;
+	margin:4px;
+	text-decoration:none;
+	font:bold 20px/30px Arial,sans-serif;
+	color:#19667d;
+	border:1px solid #8af;
+	border-radius:10px;
+	cursor:pointer;
+	background:linear-gradient(to top right,rgba(170,190,255,1) 0%,rgba(255,255,255,1) 100%)
+}
+
+.togglebtn:hover {
+	background:linear-gradient(to top,rgba(255,255,0,1) 0%,rgba(255,255,255,1) 100%)
+}
+
+
+
+
+@media print{
+	.noprint {
+		display:none!important
+		}
+	}
