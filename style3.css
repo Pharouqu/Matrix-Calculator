@@ -2,8 +2,7 @@
 		--o1Clr: hsl(44, 100%, 50%)
 }
 
-@media all{
-	body{
+body{
 		margin:0;
 		padding:0;
 		font:25px/30px Verdana,Arial,Tahoma,sans-serif;
